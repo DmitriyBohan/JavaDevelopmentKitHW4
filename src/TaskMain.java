@@ -1,5 +1,4 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /*Создать справочник сотрудников
@@ -17,25 +16,20 @@ import java.util.stream.Collectors;
 */
 public class TaskMain {
     public static void main(String[] args) {
-        List<Employee> employees = new ArrayList<>();
+        ListEmployee employees = new ListEmployee();
 
-        addEmployee(employees,new Employee("+1234567890", "John Doe", 5));
-        addEmployee(employees,new Employee("+9876543210", "Jane Smith", 3));
-        addEmployee(employees,new Employee("+5555555555", "Alice Johnson", 8));
+        addEmployee(employees, new Employee("+1234567890", "John Doe", 5));
+        addEmployee(employees, new Employee("+9876543210", "Jane Smith", 3));
+        addEmployee(employees, new Employee("+5555555555", "Alice Johnson", 8));
 
-
-        //System.out.println(employees);
-
-        System.out.println(searchEmployeeByExperience(employees,3));
+        System.out.println(searchEmployeeByExperience(employees, 3));
         System.out.println(phoneNumberByName(employees, "John Doe"));
         System.out.println(searchById(employees, 1));
-
-
     }
 
     public static class Employee {
         private static int idCounter = 0;
-        private int id ;
+        private int id;
         private String phoneNumber;
         private String name;
         private int experience;
@@ -74,27 +68,43 @@ public class TaskMain {
         }
     }
 
-    public static List<Employee> searchEmployeeByExperience(List<Employee> employees, int experience) {
-         return employees.stream().filter(employee -> employee.getExperience() == experience).collect(Collectors.toList());
+    public static class ListEmployee {
+        private List<Employee> employees;
+
+        public ListEmployee() {
+            this.employees = new ArrayList<>();
+        }
+
+        public List<Employee> getEmployees() {
+            return employees;
+        }
+
+        public void add(Employee newEmployee) {
+            employees.add(newEmployee);
+        }
     }
 
-    public static List<String> phoneNumberByName( List<Employee> employees, String nameSearch){
-
-        return employees.stream().filter(employee -> employee.getName().equalsIgnoreCase(nameSearch)).map(Employee::getPhoneNumber).collect(Collectors.toList());
-
+    public static List<Employee> searchEmployeeByExperience(ListEmployee employees, int experience) {
+        return employees.getEmployees().stream()
+                .filter(employee -> employee.getExperience() == experience)
+                .collect(Collectors.toList());
     }
 
-    public static Employee searchById (List<Employee> employees, int idSearch){
-
-        return employees.stream().filter(employee -> employee.getId() == idSearch).findFirst().orElse(null);
+    public static List<String> phoneNumberByName(ListEmployee employees, String nameSearch) {
+        return employees.getEmployees().stream()
+                .filter(employee -> employee.getName().equalsIgnoreCase(nameSearch))
+                .map(Employee::getPhoneNumber)
+                .collect(Collectors.toList());
     }
 
-    public static void addEmployee(List<Employee> employees, Employee newEmployee){
+    public static Employee searchById(ListEmployee employees, int idSearch) {
+        return employees.getEmployees().stream()
+                .filter(employee -> employee.getId() == idSearch)
+                .findFirst()
+                .orElse(null);
+    }
+
+    public static void addEmployee(ListEmployee employees, Employee newEmployee) {
         employees.add(newEmployee);
     }
-
-
-
-
-
 }
